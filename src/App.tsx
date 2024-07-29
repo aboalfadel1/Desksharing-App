@@ -1,14 +1,23 @@
-import { Button } from '@mui/material'
 import './App.css'
-import DevicesOtherIcon from '@mui/icons-material/DevicesOther';
-function App() {
- 
+import {  BrowserRouter as Router,Route, Routes } from 'react-router-dom';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import NavBar from './components/NavBar';
+import PrivateRoute from './components/PrivateRoute';
+import { AuthProvider } from './context/AuthContext';
 
+const App: React.FC = () => {
   return (
-    <>
-        <Button variant="contained"> <DevicesOtherIcon /> Desksharing</Button>
-    </>
-  )
-}
-
-export default App
+    <AuthProvider>
+      <Router>
+        <NavBar />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<PrivateRoute element={<Home />} />} />
+          <Route path="/home" element={<PrivateRoute element={<Home />} />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
+  );
+};
+export default App;
