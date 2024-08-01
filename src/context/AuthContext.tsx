@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, AuthContextType } from '../types/type';
-import dummyUsers from '../dummyUsers';
+import dummyUsers from '../data/dummyUsers';
 
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -27,7 +27,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     );
 
     if (foundUser) {
-      setUser({ username: foundUser.username });
+      setUser({ ...foundUser });
       return true;
     }
     return false;

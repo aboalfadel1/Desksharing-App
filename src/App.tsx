@@ -5,10 +5,12 @@ import Login from './pages/Login';
 import NavBar from './components/NavBar';
 import PrivateRoute from './components/PrivateRoute';
 import { AuthProvider } from './context/AuthContext';
+import { DeskProvider } from './context/DeskContext';
 
 const App: React.FC = () => {
   return (
     <AuthProvider>
+      <DeskProvider>
       <Router>
         <NavBar />
         <Routes>
@@ -17,6 +19,7 @@ const App: React.FC = () => {
           <Route path="/home" element={<PrivateRoute element={<Home />} />} />
         </Routes>
       </Router>
+      </DeskProvider>
     </AuthProvider>
   );
 };
