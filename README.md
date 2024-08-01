@@ -26,3 +26,8 @@ Die DeskSharing App ist eine moderne Anwendung, die es Unternehmen und Mitarbeit
 
    ```sh
    npm run dev
+4. **Einloggin Daten:**
+
+   ```sh
+   username: benutzer1
+   password: password1
