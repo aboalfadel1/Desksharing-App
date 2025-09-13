@@ -13,8 +13,6 @@ const Home: React.FC = () => {
   const [belegtFilter, setBelegtFilter] = useState<string>('');
   const [meineSchreibtische, setMeineSchreibtische] = useState<Schreibtisch[]>([]);
 
-//// Zu merken: Ich musste useEffect verwenden, um meine initial reservierten Tische zu laden.
-
   useEffect(() => {
     if (user) {
       const reservierteSchreibtische = schreibtische.filter(desk => desk.belegtVon === user.username);
@@ -47,57 +45,44 @@ const Home: React.FC = () => {
     const matchesBelegt = belegtFilter ? desk.istBelegt === (belegtFilter === 'belegt') : true;
     return matchesOrt && matchesBelegt;
   });
-//Anzahl für die Leiste oben
+
   const freieTischeAnzahl = filteredDesks.filter(desk => !desk.istBelegt).length;
   const belegteTischeAnzahl = filteredDesks.filter(desk => desk.istBelegt).length;
 
   return (
-    <Container>
+    <Container maxWidth="lg">
       <Typography variant="h4" component="h1" gutterBottom mt={6}>
         Schreibtische
       </Typography>
 
       <Box sx={{ mb: 3 }}>
-        <Paper sx={{ p: 2, mb: 2, display: 'flex', justifyContent: 'space-between', bgcolor: '#f5f5f5', borderRadius: 1 }}> 
-          <Typography variant="h6">
+        <Paper sx={{ p: 2, display: 'flex', justifyContent: 'space-around', bgcolor: '#e3f2fd', borderRadius: 2, boxShadow: 3 }}>
+          <Typography variant="h6" color="primary">
             Freie Tische: {freieTischeAnzahl}
           </Typography>
-          <Typography variant="h6">
+          <Typography variant="h6" color="secondary">
             Belegte Tische: {belegteTischeAnzahl}
           </Typography>
         </Paper>
       </Box>
 
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{ mb: 3 }}>
         <Grid item xs={12} md={6}>
-          <FormControl fullWidth margin="normal">
+          <FormControl fullWidth>
             <InputLabel>Ort</InputLabel>
-            <Select
-              value={ortFilter}
-              onChange={(e) => setOrtFilter(e.target.value)}
-              label="Ort"
-            >
+            <Select value={ortFilter} onChange={(e) => setOrtFilter(e.target.value)}>
               <MenuItem value="">Alle Orte</MenuItem>
-              <MenuItem value="Stockwerk 1">Stockwerk 1</MenuItem>
-              <MenuItem value="Stockwerk 2">Stockwerk 2</MenuItem>
-              <MenuItem value="Stockwerk 3">Stockwerk 3</MenuItem>
-              <MenuItem value="Stockwerk 4">Stockwerk 4</MenuItem>
-              <MenuItem value="Stockwerk 5">Stockwerk 5</MenuItem>
-              <MenuItem value="Stockwerk 6">Stockwerk 6</MenuItem>
-              <MenuItem value="Stockwerk 7">Stockwerk 7</MenuItem>
-              <MenuItem value="Stockwerk 8">Stockwerk 8</MenuItem>
+              {[...Array(8)].map((_, i) => (
+                <MenuItem key={i} value={`Stockwerk ${i + 1}`}>Stockwerk {i + 1}</MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <FormControl fullWidth margin="normal">
+          <FormControl fullWidth>
             <InputLabel>Belegungsstatus</InputLabel>
-            <Select
-              value={belegtFilter}
-              onChange={(e) => setBelegtFilter(e.target.value)}
-              label="Belegungsstatus"
-            >
+            <Select value={belegtFilter} onChange={(e) => setBelegtFilter(e.target.value)}>
               <MenuItem value="">Alle</MenuItem>
               <MenuItem value="frei">Frei</MenuItem>
               <MenuItem value="belegt">Belegt</MenuItem>
@@ -106,22 +91,23 @@ const Home: React.FC = () => {
         </Grid>
       </Grid>
 
-      <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 3 }}>
-        Meine reservierten Schreibtische: {meineSchreibtische.length === 0 ? "Du hast noch keinen Tisch reserviert" : ""}
+      <Typography variant="h5" gutterBottom>
+        Meine reservierten Schreibtische
+        {meineSchreibtische.length === 0 && ": Du hast noch keinen Tisch reserviert"}
       </Typography>
-      
-      <Grid container spacing={2} sx={{ mt: 2 }}>
-        {meineSchreibtische.map(schreibtisch => (
-          <Grid item xs={12} sm={6} md={4} key={schreibtisch.id}>
-            <Desk schreibtisch={schreibtisch} onCancelReserve={handleCancelReserve} />
+
+      <Grid container spacing={3} sx={{ mt: 2 }}>
+        {meineSchreibtische.map(desk => (
+          <Grid item xs={12} sm={6} md={4} key={desk.id}>
+            <Desk schreibtisch={desk} onCancelReserve={handleCancelReserve} />
           </Grid>
         ))}
       </Grid>
 
-      <Grid container spacing={2} sx={{ mt: 2 }}>
-        {filteredDesks.map(schreibtisch => (
-          <Grid item xs={12} sm={6} md={4} key={schreibtisch.id}>
-            <Desk schreibtisch={schreibtisch} onReserve={handleReserve} />
+      <Grid container spacing={3} sx={{ mt: 2 }}>
+        {filteredDesks.map(desk => (
+          <Grid item xs={12} sm={6} md={4} key={desk.id}>
+            <Desk schreibtisch={desk} onReserve={handleReserve} />
           </Grid>
         ))}
       </Grid>
